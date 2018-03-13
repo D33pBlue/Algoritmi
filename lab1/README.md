@@ -1,4 +1,7 @@
 # TODO
-- [ ] Funzione che calcola outdegree
-- [ ] Cambiare valore di m con OUTDEGREE invece che indegree
-- [ ] Rigenerare immagini DPA
+- [x] Funzione che calcola outdegree
+- [x] Cambiare valore di m con OUTDEGREE invece che indegree
+- [x] Rigenerare immagini DPA
+- [ ] Domanda 4
+- [ ] Formulare bene risposte
+- [ ] Verifica e sottomissione

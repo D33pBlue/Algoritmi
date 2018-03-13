@@ -1,5 +1,6 @@
 from domanda1 import *
 import random
+import time
 
 class DPATrial:
     def __init__(self,m):
@@ -36,6 +37,17 @@ def DPA_graph(m,n):
             graph[u].append(v)
     return graph
 
+def outdegree_dist(graph):
+    nvertex = float(len(graph.keys()))
+    outdegree = dict()
+    for v in graph.keys():
+        deg = len(graph[v])
+        if deg in outdegree:
+            outdegree[deg] += 1.0/nvertex
+        else:
+            outdegree[deg] = 1.0/nvertex
+    return outdegree
+
 def compare_dists(dist1,dist2):
     xs = dist1.keys()
     ys = [dist1[v] for v in xs]
@@ -49,12 +61,17 @@ def compare_dists(dist1,dist2):
 
 if __name__ == '__main__':
     graph_cit = load_adj_list('Cit-HepTh.txt',directed=True)
-    inddist1 = indegree_dist(graph_cit)
-    n = float(len(graph_cit.keys()))
+    # inddist1 = indegree_dist(graph_cit)
+    outdist1 = outdegree_dist(graph_cit)
+    n = len(graph_cit.keys())
     m = 0.0
-    for v in graph_cit.keys():
-        m += float(len(graph_cit[v]))/n
+    for o in outdist1.keys():
+        m += o*outdist1[o]
+    m = int(round(m))
     print "m=",m,"n=",n
-    graph_dpa = DPA_graph(int(m),int(n))
+    t = time.time()
+    graph_dpa = DPA_graph(m,n)
+    print "Grafo generato in",time.time()-t,"s"
     inddist2 = indegree_dist(graph_dpa)
-    compare_dists(inddist1,inddist2)
+    # compare_dists(inddist1,inddist2)
+    plot_dist(inddist2)

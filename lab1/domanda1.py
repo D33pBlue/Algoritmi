@@ -53,14 +53,14 @@ def indegree_dist(graph):
 
 def degree_dist(graph):
     nvertex = float(len(graph.keys()))
-    indegree = dict()
+    degree = dict()
     for v in graph.keys():
         deg = len(graph[v])
-        if deg in indegree:
-            indegree[deg] += 1.0/nvertex
+        if deg in degree:
+            degree[deg] += 1.0/nvertex
         else:
-            indegree[deg] = 1.0/nvertex
-    return indegree
+            degree[deg] = 1.0/nvertex
+    return degree
 
 def plot_dist(dist):
     xs = dist.keys()

@@ -62,15 +62,17 @@ def degree_dist(graph):
             indegree[deg] = 1.0/nvertex
     return indegree
 
+def plot_dist(dist):
+    xs = dist.keys()
+    ys = [dist[v] for v in xs]
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.scatter(xs,ys)
+    plt.show()
 
 
 if __name__ == '__main__':#Cit-HepTh
     adj_list = load_adj_list('Cit-HepTh.txt',directed=True)
     print len(adj_list.keys())
     inddist = indegree_dist(adj_list)
-    xs = inddist.keys()
-    ys = [inddist[v] for v in xs]
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.scatter(xs,ys)
-    plt.show()
+    plot_dist(inddist)

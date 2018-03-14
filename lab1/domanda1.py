@@ -3,7 +3,8 @@ import math
 import numpy as np
 
 """
-Legge i dati da file e restituisce la lista delle adiacenze del grafo
+Legge i dati da file e restituisce la lista delle adiacenze del grafo.
+Va specificato se il grafo e' orientato o meno
 """
 def load_adj_list(file,directed=False):
     """Aggiunge un vertice adj alla lista dei vertici adiacenti a v in adj_list"""
@@ -28,6 +29,10 @@ def load_adj_list(file,directed=False):
         # print adj_list
         return adj_list
 
+"""
+Restituisce un dizionario contenente la distribuzione del grado entrante
+del grafo (orientato), dove la chiave e' il grado e il valore la probabilita'
+"""
 def indegree_dist(graph):
     nvertex = float(len(graph.keys()))
     indegrees = dict()
@@ -51,6 +56,10 @@ def indegree_dist(graph):
     # print dist
     return dist
 
+"""
+Restituisce un dizionario contenente la distribuzione del grado di
+un grafo non orientato, dove la chiave e' il grado e il valore la probabilita'
+"""
 def degree_dist(graph):
     nvertex = float(len(graph.keys()))
     degree = dict()
@@ -62,6 +71,9 @@ def degree_dist(graph):
             degree[deg] = 1.0/nvertex
     return degree
 
+"""
+Genera il grafico log-log della distribuzione
+"""
 def plot_dist(dist):
     xs = dist.keys()
     ys = [dist[v] for v in xs]

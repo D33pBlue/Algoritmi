@@ -22,6 +22,9 @@ class DPATrial:
         self.numNodes = self.numNodes+1
         return V
 
+"""
+Implementazione dell'algoritmo DPA per la generazione di un grafo casuale
+"""
 def DPA_graph(m,n):
     graph = dict()
     for v in range(m):
@@ -37,6 +40,10 @@ def DPA_graph(m,n):
             graph[u].append(v)
     return graph
 
+"""
+Restituisce la distribuzione del grado uscente del grafo, come
+dizionario avente per chiavi il grado e per valori la probabilita'
+"""
 def outdegree_dist(graph):
     nvertex = float(len(graph.keys()))
     outdegree = dict()
@@ -48,6 +55,10 @@ def outdegree_dist(graph):
             outdegree[deg] = 1.0/nvertex
     return outdegree
 
+"""
+Genera il grafico delle due distribuzioni, mostrandole assieme per
+poterle confrontare
+"""
 def compare_dists(dist1,dist2):
     xs = dist1.keys()
     ys = [dist1[v] for v in xs]

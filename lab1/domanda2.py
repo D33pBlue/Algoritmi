@@ -1,6 +1,11 @@
 from domanda1 import *
 import random
 
+"""
+Implementazione dell'algoritmo ER per la generazione di un grafo casuale
+n = numero nodi
+p = probabilita
+"""
 def ER_graph(n,p):
     graph = dict()
     for u in range(n):
@@ -16,9 +21,3 @@ if __name__ == '__main__':
     graph = ER_graph(2770,0.5)
     inddist = indegree_dist(graph)
     plot_dist(inddist)
-
-"""
-La distribuzione del grado entrante del grafo generato dall'algoritmo ER
-e' a campana. E' quindi diversa da quella del grafo delle citazioni
-ARGOMENTARE..
-"""

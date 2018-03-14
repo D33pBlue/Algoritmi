@@ -13,7 +13,7 @@ def ER_graph(n,p):
     return graph
 
 if __name__ == '__main__':
-    graph = ER_graph(2770,0.1)
+    graph = ER_graph(2770,0.5)
     inddist = indegree_dist(graph)
     plot_dist(inddist)
 

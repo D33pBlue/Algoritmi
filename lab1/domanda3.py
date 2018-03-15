@@ -2,6 +2,7 @@ from domanda1 import *
 import random
 import time
 
+
 class DPATrial:
     def __init__(self,m):
         self.numNodes = m

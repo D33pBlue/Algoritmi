@@ -1,0 +1,9 @@
+[package]
+name = "lab2"
+version = "0.1.0"
+authors = ["D33pBlue <francescob994@protonmail.com>"]
+
+[dependencies]
+rand = "0.4.0"
+dataplotlib = "0.1.3"
+gnuplot = "0.0.24"

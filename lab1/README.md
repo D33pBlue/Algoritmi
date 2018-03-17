@@ -1,7 +1,2 @@
-# TODO
-- [x] Funzione che calcola outdegree
-- [x] Cambiare valore di m con OUTDEGREE invece che indegree
-- [x] Rigenerare immagini DPA
-- [x] Domanda 4
-- [x] Formulare bene risposte
-- [x] Verifica e sottomissione
+# LABORATORIO 1
+In questa esercitazione viene analizzato un grafo che rappresenta le citazioni in articoli scientifici. Viene studiata in particolare la distribuzione del grado entrante e confrontata con quella di grafi generati casualmente con gli algoritmi ER e DPA.

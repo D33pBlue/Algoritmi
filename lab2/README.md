@@ -1,7 +1,2 @@
-# TODO
-- [x] Domanda 1
-- [x] Domanda 2
-- [x] Domanda 3
-- [x] Domanda 4
-- [x] Formulare bene risposte
-- [ ] Verifica e sottomissione
+# LABORATORIO 2
+In questo laboratorio viene analizzata la resilienza di una rete reale (utilizzando come metrica la connettività del grafo) e confrontata con quella di altre reti generate casialmente con gli algoritmi ER e UPA.

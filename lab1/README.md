@@ -4,4 +4,4 @@
 - [x] Rigenerare immagini DPA
 - [x] Domanda 4
 - [x] Formulare bene risposte
-- [ ] Verifica e sottomissione
+- [x] Verifica e sottomissione

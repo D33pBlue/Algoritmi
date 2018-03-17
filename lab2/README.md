@@ -1,7 +1,7 @@
 # TODO
 - [x] Domanda 1
-- [ ] Domanda 2
+- [x] Domanda 2
 - [x] Domanda 3
-- [ ] Domanda 4
-- [ ] Formulare bene risposte
+- [x] Domanda 4
+- [x] Formulare bene risposte
 - [ ] Verifica e sottomissione

@@ -1,5 +1,7 @@
+MEMBRI DEL GRUPPO: Bizzaro Francesco, Ferrarin Lorenzo
+
 1.
-File immagine allegato
+Il grafico è mostrato nell'immagine Dist_Cit.png (allegata).
 
 2.
 Generando dei grafi casuali utilizzando l'algoritmo ER, si nota che al variare dei parametri la distribuzione del grado entrante ha sempre un andamento crescente fino a raggiungere un punto di massimo e successivamente decrescente (forma a campana). Si possono osservare come esempi i grafici delle distribuzioni di un grafo generato con n=2770, p=0.5 (ER_2770_0_5.png) e di un grafo generato con n=2770, p=0.1 (ER_2770_0_1.png).
@@ -7,11 +9,11 @@ La distribuzione del grado entrante di un grafo casuale generato dall'algoritmo 
 
 3.
 m=13 n=27770
-Si può osservare il grafico in figura Dist_DPA.png
+Si può osservare il grafico in figura Dist_DPA.png (allegata)
 
 4.
-Le due distribuzioni si assomigliano (pur presentando differenze) come si può osservare nella figura Dist_Cit_DPA.png; entrambe sono decrescenti tuttavia la distribuzione del grafo ottenuto con l'algoritmo DPA decresce più velocemente con una curva più accentuata.
-Il comportamento dell'algoritmo DPA può essere spiegato dal fenomeno della "struttura gerarchica delle reti" in quanto ad ogni iterazione viene selezionato un nodo da cui far partire gli archi verso i nodi selezionati con l'estrazione casuale, determinando una struttura gerarchica in cui vi saranno dei nodi principali aventi molti collegamenti. Inoltre è presente il fenomeno "rich get richer" in quanto vi sono dei nodi più probabili nella selezione casuale, che tenderanno ad avere grado più alto.
+Le due distribuzioni si assomigliano (pur presentando differenze) come si può osservare nella figura Dist_Cit_DPA.png (allegata). Entrambe sono decrescenti tuttavia la distribuzione del grafo ottenuto con l'algoritmo DPA decresce più velocemente con una curva più accentuata.
+Il comportamento dell'algoritmo DPA può essere spiegato dal fenomeno della "struttura gerarchica delle reti" in quanto ad ogni iterazione vengono selezionati dei nodi che andranno a collegarsi ad una struttura preesistente, determinando una struttura gerarchica in cui vi saranno dei nodi principali aventi molti collegamenti. Inoltre è presente il fenomeno "rich get richer" in quanto vi sono dei nodi più probabili nella selezione casuale, che tenderanno ad avere grado più alto.
 Il fenomeno "rich get richer" spiega meglio la distribuzione del grado entrante del grado delle citazioni, in quanto sono presenti pochi nodi con grado entrante più alto e tanti con grado entrante basso. Questo suggerisce che vi siano articoli più autorevoli che vengono citati spesso (dalla maggior parte degli altri articoli), mentre d'altro canto la maggior parte viene citata poco.
 
 5.

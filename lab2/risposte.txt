@@ -1,0 +1,22 @@
+MEMBRI DEL GRUPPO: Bizzaro Francesco, Ferrarin Lorenzo
+
+1.
+Per generare grafi casuali aventi lo stesso numero di nodi e un numero di archi simile al grafo considerato, sono stati selezionati i seguenti valori:
+n=1476, p=0.0016 e m=2
+Il grafico della resilienza varia a seconda dell'esecuzione, essendo gli attacchi casuali. Ne sono stati allegati due, nelle figure resilienza1.png e resilienza2.png. In aggiunta è stata calcolata anche la connettività, definita come rapporto fra il numero di nodi nella componente connessa massimale ed il numero totale di nodi; sono allegati anche due grafici che rapprentano l'andamento della connettività del grafo all'aumentare del numero di nodi disattivati (connettivita1.png e connettivita2.png).
+
+2.
+Le reti considerate hanno inizialmente 1476 nodi; pertanto quando gli attacchi in ordine casuale hanno disabilitato il 20% dei nodi (295), i tre grafi avranno 1181 nodi.
+Se si considera il grafico nella figura resilienza1.png si nota che, dopo aver disattivato 295 nodi, la rete reale e la rete casuale generata con l'algoritmo ER sono resilienti, mentre la rete casuale generate con l'algoritmo UPA non è resiliente.
+Considerando invece il grafico nella figura resilienza2.png si nota che la rete reale non è resiliente, mentre entrambe le reti casuali lo sono (dopo la disattivazione di 295 nodi).
+I risultati discordanti sono dovuti alla cuasualità nella scelta dell'ordine con cui disattivare i nodi. Se infatti vengono disattivati prima nodi con altro grado, la resilienza della rete decresce drasticamente.
+
+3.
+Il grafico richiesto è rappresentato nel file Structural.png (allegato).
+
+4.
+Diversamente da quanto avveniva con l'attacco casuale, i grafici della resilienza delle reti in questo caso sono più regolari (pur mantenendo un certo grado di variabilità dovuto alla casualità nella generazione delle reti). Nel grafico della figura Structural.png si può notare che dopo la rimozione di 295 nodi (20% dei nodi delle reti) solo la rete casuale generata dall'algoritmo ER risulta essere resiliente, mentre la rete reale e quella generata dall'algoritmo UPA non lo sono. L'algoritmo ER infatti costuisce un grafo casuale i cui nodi hanno tutti grado simile, metre l'algorimo UPA va ad aggiungere degli archi ad una struttura connessa precedentemente creata i cui nodi avranno grado sensibilmente maggiore. Nel primo caso non fa molta differenza quale nodo venga disattivato ad un passo generico, metre nel secondo caso se si va a disattivare la struttura centrale si diminuirà drasticamente la resilienza della rete. La rete reale pur non essendo resiliente secondo la definizione data alla domanda 3, risulta essere migliore della rete casuale generata con l'algoritmo UPA.  
+
+5.
+La soluzione allegata è stata implementata in Rust (https://www.rust-lang.org/it-IT/). Il programma si trova nel file main.rs nella cartella src. Per la generazione dei grafici è stata usata la libreria gnuplot (http://gnuplot.info/).
+Per compilare il codice sorgente è sufficiente avere installato nel proprio sistema il packet manager Cargo (https://doc.rust-lang.org/cargo/) e dare il comando "cargo build". Nella cartella bin è presente l'eseguibile (per Windows 64bit) già compilato.

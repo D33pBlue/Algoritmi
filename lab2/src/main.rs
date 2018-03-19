@@ -9,6 +9,7 @@ use std::fs::File;
 use std::collections::HashMap;
 use rand::Rng;
 
+// read a graph from file and return its adjacency list
 fn read_graph(file: String) -> HashMap<i32,Vec<i32>>{
     let mut graph = HashMap::new();
     let f = File::open(file).unwrap();
@@ -35,6 +36,8 @@ fn read_graph(file: String) -> HashMap<i32,Vec<i32>>{
     return graph;
 }
 
+// generate a random graph with n nodes and that for each
+// couple of nodes there is p probability to find an edge
 fn er(n: i32,p:f64)->HashMap<i32,Vec<i32>>{
     let mut graph: HashMap<i32,Vec<i32>> = HashMap::new();
     for u in 0..n{
@@ -52,17 +55,21 @@ fn er(n: i32,p:f64)->HashMap<i32,Vec<i32>>{
     return graph;
 }
 
+// Utility struc for UPA algorithm
 struct UPATrial {
     numNodes: i32,
     nodeNumbers: Vec<i32>,
 }
 
+// methods for UPATrial
 impl UPATrial{
 
+    // default constructor
     fn new()->UPATrial{
         UPATrial {numNodes: 0,nodeNumbers: Vec::new(),}
     }
 
+    // constructor
     fn m(&mut self,m: i32)->&mut UPATrial{
         self.numNodes = m;
         for i in 0..m {
@@ -73,7 +80,7 @@ impl UPATrial{
         return self;
     }
 
-
+    // run a trial and give ther resulting extracted nodes
     fn run_trial(&mut self,m:i32)->Vec<i32>{
         let mut V = Vec::new();
         rand::thread_rng().shuffle(&mut self.nodeNumbers);
@@ -89,6 +96,7 @@ impl UPATrial{
     }
 }
 
+// generate a random graph with n nodes
 fn upa(n:i32,m:i32)->HashMap<i32,Vec<i32>>{
     let mut graph = HashMap::new();
     for u in 0..m {
@@ -111,6 +119,7 @@ fn upa(n:i32,m:i32)->HashMap<i32,Vec<i32>>{
     return graph;
 }
 
+// return the number of nodes and edges of a graph
 fn shape(graph: &HashMap<i32,Vec<i32>>)->(usize,usize){
     let mut nodes = 0;
     let mut edges = 0;
@@ -121,6 +130,7 @@ fn shape(graph: &HashMap<i32,Vec<i32>>)->(usize,usize){
     return (nodes,edges/2);
 }
 
+// return the list of nodes of a graph
 fn get_nodes(graph: &HashMap<i32,Vec<i32>>)->Vec<i32>{
     let mut nodes = Vec::new();
     for v in graph.keys(){
@@ -129,6 +139,7 @@ fn get_nodes(graph: &HashMap<i32,Vec<i32>>)->Vec<i32>{
     return nodes;
 }
 
+// remove a node from a graph and all its edges
 fn remove_node(graph: &mut HashMap<i32,Vec<i32>>,sel: i32){
     let adj = graph.remove(&sel).unwrap();
     for u in adj {
@@ -145,6 +156,7 @@ enum ColorG {
     Black,
 }
 
+// return a vector with the connected components of a graph
 fn connected_components(graph: & HashMap<i32,Vec<i32>>)->Vec<Vec<i32>>{
     let mut color: HashMap<i32,ColorG> = HashMap::new();
     for v in get_nodes(&graph) {
@@ -161,6 +173,7 @@ fn connected_components(graph: & HashMap<i32,Vec<i32>>)->Vec<Vec<i32>>{
     return cc;
 }
 
+// explore a graph in depht
 fn dfs_visited<'a>(graph: & HashMap<i32,Vec<i32>>,
         color: &mut HashMap<i32,ColorG>,
         u: i32,visited:&'a mut Vec<i32>)->&'a mut Vec<i32> {
@@ -175,6 +188,8 @@ fn dfs_visited<'a>(graph: & HashMap<i32,Vec<i32>>,
         return visited;
     }
 
+// return the number of nodes inside the biggest connected component
+// divided by the total number of nodes in the graph
 fn connettivita(cc:&Vec<Vec<i32>>,n:usize)->f64{
     let mut cmax = 0f64;
     for comp in cc {
@@ -189,6 +204,8 @@ fn connettivita(cc:&Vec<Vec<i32>>,n:usize)->f64{
     return cmax/(n as f64);
 }
 
+// return the number of nodes inside the biggest connected component of
+// the graph
 fn resilienza(cc:&Vec<Vec<i32>>)->f64{
     let mut cmax = 0f64;
     for comp in cc {
@@ -203,6 +220,8 @@ fn resilienza(cc:&Vec<Vec<i32>>)->f64{
     return cmax;
 }
 
+// disable one by one all nodes in the graph, choosend in a random way,
+// and return the result of calling resilienza at each time
 fn attack(mut graph: &mut HashMap<i32,Vec<i32>>)->Vec<f64>{
     println!("Simulo attacchi..");
     let mut keys = get_nodes(&graph);
@@ -221,6 +240,9 @@ fn attack(mut graph: &mut HashMap<i32,Vec<i32>>)->Vec<f64>{
     return conn;
 }
 
+// disable one by one all nodes in the graph, choosing at each time
+// the one with the biggest number of edges,
+// and return the result of calling resilienza
 fn structural_attack(mut graph: &mut HashMap<i32,Vec<i32>>)->Vec<f64>{
     println!("Simulo attacchi strutturali..");
     let mut keys = get_nodes(&graph);
@@ -250,29 +272,35 @@ fn structural_attack(mut graph: &mut HashMap<i32,Vec<i32>>)->Vec<f64>{
 }
 
 fn main() {
+    // load the real network
     let mut graph = read_graph(String::from("as19991212.txt"));
     let (n1,e1) = shape(&graph);
     let x1 = linspace(1f64, n1 as f64, n1 as u64);
     println!("as19991212 \t n: {} \t e: {}",n1,e1);
 
+    // generate a random network with ER algorithm
     let mut er_graph = er(1476,0.0016);
     let (n2,e2) = shape(&er_graph);
     let x2 = linspace(1f64, n2 as f64, n2 as u64);
     println!("er-generated \t n: {} \t e: {}",n2,e2);
 
+    // generate a random network with UPA algorithm
     let mut upa_graph = upa(1476,2);
     let (n3,e3) = shape(&upa_graph);
     let x3 = linspace(1f64, n3 as f64, n3 as u64);
     println!("upa-generated \t n: {} \t e: {}",n3,e3);
 
+    // attack all networks with random attack
     // let resilienza1: Vec<f64> = attack(&mut graph);
     // let res_er: Vec<f64> = attack(&mut er_graph);
     // let res_upa: Vec<f64> = attack(&mut upa_graph);
 
+    // attack all networks with structural attack
     let resilienza1: Vec<f64> = structural_attack(&mut graph);
     let res_er: Vec<f64> = structural_attack(&mut er_graph);
     let res_upa: Vec<f64> = structural_attack(&mut upa_graph);
 
+    // plot the results
     let mut fg = Figure::new();
     fg.axes2d()
         .lines(&x1, &resilienza1,

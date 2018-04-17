@@ -60,10 +60,15 @@ def dijkstra(graph,sourc):
     q = PriorityQueue(graph)
     while not q.empty():
         u = q.extractMin()
-        for x in graph[u].keys():
-            if graph[u]['d']+graph[u][x]["time"]<graph[v]['d']:
-                relax(graph,u,v)
-                q.decreaseKey(v,graph[v]['d'])
+        # print u,graph[u]['d'],graph['s0']['d']
+        # break
+        for v in graph[u].keys():
+            if not v in ['d','p']:
+                # print (graph[u]['d'])+(graph[u][v]["time"]),graph[v]['d']
+                if ((graph[u]['d'])+(graph[u][v]["time"]))<(graph[v]['d']):
+                    # print graph[v]
+                    relax(graph,u,v)
+                    q.changeKey(v,graph[v]['d'])
 
 def find_min_path(graph,sourc,dest):
     dijkstra(graph,sourc)
@@ -81,13 +86,15 @@ def ccrp(graph,sourc,dest):
     s0 = 's0'
     graph[s0] = dict()
     for x in sourc:
-        graph[s0][x] = {"time":0.0,"cap"=9999999999999999999999999}
+        graph[s0][x] = {"time":0.0,"cap":9999999999999999999999999}
     plan = []
     while True:
         path = None
         road_time = INF
         for vk in dest:
             p,t = find_min_path(graph,s0,vk)
+            print p
+            print t
             if t<road_time:
                 path = p
                 road_time = t
@@ -119,8 +126,9 @@ def plot_plan_stats(plan):
 
 if __name__ == '__main__':
     graph = load_graph("SFroad.txt")
-    sources = [3718987342,915248218,65286004]
-    destinations = [261510687,3522821903,65319958,65325408,65295403,258913493]
+    #print graph['261510687']
+    sources = ['3718987342','915248218','65286004']
+    destinations = ['261510687','3522821903','65319958','65325408','65295403','258913493']
     plan = ccrp(graph,sources,destinations)
-    print plan
+    print "plan:",plan
     plot_plan_stats(plan)

@@ -77,7 +77,6 @@ def find_min_path(graph,sourc,dest):
         path.insert(0,current)
     return path,path_time
 
-
 def ccrp(graph,sourc,dest):
     s0 = 's0'
     graph[s0] = dict()
@@ -94,17 +93,34 @@ def ccrp(graph,sourc,dest):
                 road_time = t
         if path == None:
             return plan
-        plan.append(path)
         flow = min([graph[path[i]][path[i+1]]["cap"] for i in range(len(path)-1)])
+        plan.append((path,flow,road_time))
         for i in range(len(path)-1):
             graph[path[i]][path[i+1]]["cap"] -= flow
             if graph[path[i]][path[i+1]]["cap"] == 0:
                 graph[path[i]].pop(path[i+1],None)
 
+def plot_plan_stats(plan):
+    captot = []
+    timetot = []
+    for i in range(1,len(plan)):
+        cap = 0
+        tm = 0
+        for j in range(i):
+            cap += plan[j][1]
+            t = plan[j][2]
+            if t > tm:
+                tm = t
+        captot.append(cap)
+        timetot.append(tm)
+    plt.plot(captot,timetot)
+    plt.show()
 
 
 if __name__ == '__main__':
     graph = load_graph("SFroad.txt")
     sources = [3718987342,915248218,65286004]
     destinations = [261510687,3522821903,65319958,65325408,65295403,258913493]
-    print graph
+    plan = ccrp(graph,sources,destinations)
+    print plan
+    plot_plan_stats(plan)

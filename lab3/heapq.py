@@ -38,18 +38,23 @@ class PriorityQueue:
         return hmin.value
 
     def minHeapfy(self,i):
-        l = 2*i
-        r = 2*i+1
-        m = i
-        if l<len(self.q) and self.q[l].key<self.q[m].key:
-            m = l
-        if r<len(self.q) and self.q[r].key<self.q[m].key:
-            m = r
-        if m != i:
-            t = self.q[i]
-            self.q[i] = self.q[m]
-            self.q[m] = t
-            self.minHeapfy(m)
+        stop = False
+        while not stop:
+            l = 2*i
+            r = 2*i+1
+            m = i
+            if l<len(self.q) and self.q[l].key<self.q[m].key:
+                m = l
+            if r<len(self.q) and self.q[r].key<self.q[m].key:
+                m = r
+            if m != i:
+                t = self.q[i]
+                self.q[i] = self.q[m]
+                self.q[m] = t
+                #self.minHeapfy(m)
+                i = m
+            else:
+                stop = True
 
     def minHeapfyR(self,i):
         while i>=0 and self.q[i/2].key>self.q[i].key:

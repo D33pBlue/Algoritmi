@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import math
 from heapq import PriorityQueue
+import time
 
 INF = 99999999999999999999999.0
 
@@ -60,18 +61,15 @@ def dijkstra(graph,sourc):
     q = PriorityQueue(graph)
     while not q.empty():
         u = q.extractMin()
-        # print u,graph[u]['d'],graph['s0']['d']
-        # break
+        if graph[u]['d'] >= INF:
+            break
         for v in graph[u].keys():
             if not v in ['d','p']:
-                # print (graph[u]['d'])+(graph[u][v]["time"]),graph[v]['d']
                 if ((graph[u]['d'])+(graph[u][v]["time"]))<(graph[v]['d']):
-                    # print graph[v]
                     relax(graph,u,v)
                     q.changeKey(v,graph[v]['d'])
 
 def find_min_path(graph,sourc,dest):
-    dijkstra(graph,sourc)
     if graph[dest]['p'] == None:
         return None,INF
     path = [dest]
@@ -79,7 +77,8 @@ def find_min_path(graph,sourc,dest):
     current = dest
     while current != None:
         current = graph[current]['p']
-        path.insert(0,current)
+        if current != None:
+            path.insert(0,current)
     return path,path_time
 
 def ccrp(graph,sourc,dest):
@@ -91,9 +90,10 @@ def ccrp(graph,sourc,dest):
     while True:
         path = None
         road_time = INF
+        dijkstra(graph,s0)
         for vk in dest:
             p,t = find_min_path(graph,s0,vk)
-            print p
+            # print p
             print t
             if t<road_time:
                 path = p
@@ -129,6 +129,8 @@ if __name__ == '__main__':
     #print graph['261510687']
     sources = ['3718987342','915248218','65286004']
     destinations = ['261510687','3522821903','65319958','65325408','65295403','258913493']
+    t = time.time()
     plan = ccrp(graph,sources,destinations)
     print "plan:",plan
+    print time.time()-t,"s"
     plot_plan_stats(plan)

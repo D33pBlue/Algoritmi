@@ -12,7 +12,6 @@ class PriorityQueue:
         if graph!=None:
             for x in graph.keys():
                 self.addItem(x,graph[x]['d'])
-            # print [(x.key,x.value) for x in self.q[:10]]
 
     def addItem(self,value,key):
         x = Item(key,value)
@@ -51,7 +50,6 @@ class PriorityQueue:
                 t = self.q[i]
                 self.q[i] = self.q[m]
                 self.q[m] = t
-                #self.minHeapfy(m)
                 i = m
             else:
                 stop = True

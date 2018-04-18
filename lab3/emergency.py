@@ -71,10 +71,10 @@ def dijkstra(graph,sourc):
             stop = True
         else:
             for v in graph[u].keys():
-                if not v in ['d','p']:
+                if not v in ['d','p','pos']:
                     if ((graph[u]['d'])+(graph[u][v]["time"]))<(graph[v]['d']):
                         relax(graph,u,v)
-                        q.changeKey(v,graph[v]['d'])
+                        q.changeKey(graph[v]['pos'],graph[v]['d'])
     print("[ Dijkstra Time:",time.time()-t,"s ]")
 
 # extract the minimal path from source to destination if it is executed
@@ -183,19 +183,19 @@ def find_bottlenek(sources,dests,plan):
 
 
 if __name__ == '__main__':
-    # graph = load_graph("SFroad.txt")
+    graph = load_graph("SFroad.txt")
     sources = ['3718987342','915248218','65286004']
     destinations = ['261510687','3522821903','65319958','65325408','65295403','258913493']
     t = time.time()
-    # sctot,sc = cap_sourc(graph,sources)
-    # dctot,dc = cap_dest(graph,destinations)
-    # print("Sources capacity:",sctot)
-    # print(sc)
-    # print("Destinations capacity:",dctot)
-    # print(dc)
-    # plan = ccrp(graph,sources,destinations)
-    with open("plan.pickle",'rb') as f:
-        plan = pickle.load(f)
+    sctot,sc = cap_sourc(graph,sources)
+    dctot,dc = cap_dest(graph,destinations)
+    print("Sources capacity:",sctot)
+    print(sc)
+    print("Destinations capacity:",dctot)
+    print(dc)
+    plan = ccrp(graph,sources,destinations)
+    # with open("plan.pickle",'rb') as f:
+    #     plan = pickle.load(f)
     # print("Plan:",plan)
     print("Plan capacity:",cap_plan(plan))
     scb,dcb = find_bottlenek(sources,destinations,plan)
@@ -203,5 +203,5 @@ if __name__ == '__main__':
     print(scb)
     print("Plan Destinations Capacity Distribution:")
     print(dcb)
-    print("[ Execution Time:",(time.time()-t)/60.0,"min ]")
+    print("[ Execution Time:",(time.time()-t),"s ]")
     plot_plan_stats(plan)

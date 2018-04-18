@@ -1,4 +1,4 @@
-MEMBRI DEL GRUPPO: Bizzaro Francesco, Ferrarin Lorenzo
+RISPOSTE:
 
 1.
 Il grafico a linee richiesto è allegato (grafico1.png). In particolare ogni punto rappresenta un piano parziale calcolato dall'algoritmo: nell'asse x viene riportata la capacità totale del piano parziale, mentre nell'asse y il tempo di percorrenza.
@@ -38,7 +38,7 @@ Mentre la capacità di veicoli uscenti del piano (sempre 10500) è distribuita c
 Analizzando le distribuzioni si può notare che il collo di bottiglia impedisce il transito di 500 veicoli verso la destinazione '261510687' e di 1000 verso '3522821903'; inoltre nessun veicolo che rispetti il piano transita dalla sorgente '915248218'. Pertanto il collo di bottiglia si trova lungo i possibili cammini che interessano questi tre nodi.
 
 3.
-Per l'implementazione della coda di priorità per l'algoritmo di Dijkstra è stata usata la struttura dati Min-Heap. Questa prevede l'utilizzo di una lista che viene interpretata come albero binario, dove i figli di un nodo i si trovano nelle posizioni 2*i e 2*i+1. Viene inoltre mantenuto l'invariante che ogni nodo abbia valore minore o uguale a quello di tutti i discendenti. Per mantenere vera questa proprietà, ad ogni inserimento, estrazione o modifica di chiave, viene fatto uso della funzione minHeapfy o minHeapfyR (che considera come proprietà il fatto che ogni nodo sia maggiore o uguale ai nodi genitori), entrambe di complessità O(log n). La creazione della coda ha complessità O(n*log(n)), l'estrazione del minimo O(log(n)) mentre la modifica della chiava O(log(n)). 
+Per l'implementazione della coda di priorità per l'algoritmo di Dijkstra è stata usata la struttura dati Min-Heap. Questa prevede l'utilizzo di una lista che viene interpretata come albero binario, dove i figli di un nodo i si trovano nelle posizioni 2*i e 2*i+1. Viene inoltre mantenuto l'invariante che ogni nodo abbia valore minore o uguale a quello di tutti i discendenti. Per mantenere vera questa proprietà, ad ogni inserimento, estrazione o modifica di chiave, viene fatto uso della funzione minHeapfy o minHeapfyR (che considera come proprietà il fatto che ogni nodo sia maggiore o uguale ai nodi genitori), entrambe di complessità O(log n). La creazione della coda ha complessità O(n*log(n)), l'estrazione del minimo O(log(n)), mentre la modifica della chiave O(log(n)).
 
 
 4.

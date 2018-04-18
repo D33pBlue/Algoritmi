@@ -1,4 +1,4 @@
-MEMBRI DEL GRUPPO: Bizzaro Francesco, Ferrarin Lorenzo
+RISPOSTE:
 
 1.
 Per generare grafi casuali aventi lo stesso numero di nodi e un numero di archi simile al grafo considerato, sono stati selezionati i seguenti valori:
@@ -15,7 +15,7 @@ I risultati discordanti sono dovuti alla cuasualità nella scelta dell'ordine co
 Il grafico richiesto è rappresentato nel file Structural.png (allegato).
 
 4.
-Diversamente da quanto avveniva con l'attacco casuale, i grafici della resilienza delle reti in questo caso sono più regolari (pur mantenendo un certo grado di variabilità dovuto alla casualità nella generazione delle reti). Nel grafico della figura Structural.png si può notare che dopo la rimozione di 295 nodi (20% dei nodi delle reti) solo la rete casuale generata dall'algoritmo ER risulta essere resiliente, mentre la rete reale e quella generata dall'algoritmo UPA non lo sono. L'algoritmo ER infatti costuisce un grafo casuale i cui nodi hanno tutti grado simile, metre l'algorimo UPA va ad aggiungere degli archi ad una struttura connessa precedentemente creata i cui nodi avranno grado sensibilmente maggiore. Nel primo caso non fa molta differenza quale nodo venga disattivato ad un passo generico, metre nel secondo caso se si va a disattivare la struttura centrale si diminuirà drasticamente la resilienza della rete. La rete reale pur non essendo resiliente secondo la definizione data alla domanda 3, risulta essere migliore della rete casuale generata con l'algoritmo UPA.  
+Diversamente da quanto avveniva con l'attacco casuale, i grafici della resilienza delle reti in questo caso sono più regolari (pur mantenendo un certo grado di variabilità dovuto alla casualità nella generazione delle reti). Nel grafico della figura Structural.png si può notare che dopo la rimozione di 295 nodi (20% dei nodi delle reti) solo la rete casuale generata dall'algoritmo ER risulta essere resiliente, mentre la rete reale e quella generata dall'algoritmo UPA non lo sono. L'algoritmo ER infatti costuisce un grafo casuale i cui nodi hanno tutti grado simile, metre l'algorimo UPA va ad aggiungere degli archi ad una struttura connessa precedentemente creata i cui nodi avranno grado sensibilmente maggiore. Nel primo caso non fa molta differenza quale nodo venga disattivato ad un passo generico, metre nel secondo caso se si va a disattivare la struttura centrale si diminuirà drasticamente la resilienza della rete. La rete reale pur non essendo resiliente secondo la definizione data alla domanda 3, risulta essere migliore della rete casuale generata con l'algoritmo UPA.
 
 5.
 La soluzione allegata è stata implementata in Rust (https://www.rust-lang.org/it-IT/). Il programma si trova nel file main.rs nella cartella src. Per la generazione dei grafici è stata usata la libreria gnuplot (http://gnuplot.info/).

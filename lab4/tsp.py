@@ -89,7 +89,7 @@ def hk_visit(v,graph,S,d,p,start,limit):
             if (dist+graph[u]['dist'][v]) < mindist:
                 mindist = dist+graph[v]['dist'][u]
                 minprec = u
-    print v,S_h
+    # print v,S_h
     d[(v,S_h)] = mindist
     p[(v,S_h)] = minprec
     return mindist

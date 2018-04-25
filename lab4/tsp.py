@@ -1,6 +1,7 @@
 import time
 import math
 import os
+from heapq import *
 
 HEADER = "NODE_COORD_SECTION"
 WTYPE = "EDGE_WEIGHT_TYPE:"
@@ -64,10 +65,34 @@ def load_data(file):
     return graph,name,weight_type,dim
 
 
+def get_path(p,endp):
+    path = ['1']
+    stop = False
+    while not stop:
+        if endp in p:
+            prec = p[endp]
+            path.insert(0,prec[0])
+            endp = prec
+        else:
+            stop = True
+        if endp[0]=='1':
+            stop = True
+    return path
+
+def check_distance(path,graph):
+    i = '1'
+    distance = 0.0
+    for j in path:
+        distance += graph[i]['dist'][j]
+        i = j
+    return distance
+
 def held_karp(graph):
     d = dict()
     p = dict()
-    dist = hk_visit('1',graph,graph.keys(),d,p,time.time(),30)
+    dist = hk_visit('1',graph,graph.keys(),d,p,time.time(),120)
+    path = get_path(p,('1',hashlist(graph.keys())))
+    # print path
     return dist
 
 def hashlist(S):
@@ -76,7 +101,7 @@ def hashlist(S):
 def hk_visit(v,graph,S,d,p,start,limit):
     S_h = hashlist(S)
     if len(S) == 1 and S[0]==v:
-        return graph[v]['dist']['1']
+        return graph['1']['dist'][v]
     if (v,S_h) in d:
         return d[(v,S_h)]
     mindist = 99999999999999999999999
@@ -85,22 +110,25 @@ def hk_visit(v,graph,S,d,p,start,limit):
         if time.time()-start>limit:
             break
         if u!=v:
-            dist = hk_visit(u,graph,[x for x in S if x!=v],d,p,start,limit)
+            S2 = [x for x in S if x!=v]
+            S2.sort(key=lambda x: graph[u]['dist'][x])
+            dist = hk_visit(u,graph,S2,d,p,start,limit)
             if (dist+graph[u]['dist'][v]) < mindist:
                 mindist = dist+graph[v]['dist'][u]
-                minprec = u
+                minprec = (u,hashlist(S2))
     # print v,S_h
     d[(v,S_h)] = mindist
     p[(v,S_h)] = minprec
     return mindist
 
-def nearest_neighbour(graph):
+
+def nearest_neighbour(graph,v0='1',S0=None):
     d = dict()
     p = dict()
-    S = [x for x in graph.keys() if x!='1']
-    v = '1'
+    S = [x for x in graph.keys() if (x!=v0 and (S0==None or x in S0))]
+    v = v0
     d[v] = 0
-    last = '1'
+    last = v0
     while len(S)>0:
         mindist = 9999999999999999999
         u = '-1'
@@ -114,21 +142,99 @@ def nearest_neighbour(graph):
         last = u
         S = [x for x in S if x!=u]
         # print "dist",d[u],"u",u,"p",p[u]
-    d['1'] = d[last]+graph[last]['dist']['1']
-    p['1'] = last
-    return d['1']
+    d[v0] = d[last]+graph[last]['dist'][v0]
+    p[v0] = last
+    return d[v0]
+
+def best_nn(graph,S):
+    nn_best = 999999999999999
+    v_best = S[0]
+    for v in S:
+        nn = nearest_neighbour(graph,v,S)
+        if nn<nn_best:
+            nn_best = nn
+            v_best = v
+    return nn_best,v_best
+
+def prim_mst(graph,r):
+    p = dict()
+    for v in graph.keys():
+        graph[v]['extract'] = False
+        graph[v]['d'] = 999999999999999999999999
+        p[v] = None
+    graph[r]['d'] = 0
+    q = PriorityQueue(graph)
+    while not q.empty():
+        u = q.extractMin()
+        graph[u]['extract'] = True
+        for v in graph[u]['dist'].keys():
+            if (not graph[v]['extract']) and graph[u]['dist'][v]<graph[v]['d']:
+                graph[v]['d'] = graph[u]['dist'][v]
+                p[v] = u
+                q.changeKey(graph[v]['pos'],v,graph[v]['d'])
+    return [(v,p[v]) for v in graph.keys() if v!=r]
+
+def infix_visit(tree,v0,path):
+    if not tree[v0]['visited']:
+        path.append(v0)
+        tree[v0]['visited'] = True
+        for c in tree[v0]['adj']:
+            infix_visit(tree,c,path)
 
 
 def two_approximation(graph):
-    pass
+    v0 = '1'
+    mst = prim_mst(graph,v0)
+    tree = dict()
+    for v in mst:
+        if not v[0] in tree:
+            tree[v[0]]={'adj':[]}
+        if not v[1] in tree:
+            tree[v[1]]={'adj':[]}
+        tree[v[0]]['adj'].append(v[1])
+        tree[v[1]]['adj'].append(v[0])
+    for v in tree.keys():
+        tree[v]['visited'] = False
+    path = []
+    infix_visit(tree,v0,path)
+    path.append(v0)
+    dist = 0.0
+    u = v0
+    for v in path[1:]:
+        dist += graph[u]['dist'][v]
+        u = v
+    return dist
 
 if __name__ == '__main__':
-    for data in ['burma14.tsp','ulysses16.tsp','berlin52.tsp','kroA100.tsp',
-        'ch150.tsp','gr202.tsp','pcb442.tsp']:#os.listdir("./Data"):
-        graph,name,weight_type,dim = load_data("./Data/"+data)
+    results = []
+    for data in [
+        ('burma14.tsp',3323.0),
+        ('ulysses16.tsp',6859.0),
+        ('berlin52.tsp',7542.0),
+        ('kroA100.tsp',21282.0),
+        ('ch150.tsp',6528.0),
+        ('gr202.tsp',40160.0),
+        ('pcb442.tsp',50778.0)
+        ]:
+        res = []
+        graph,name,weight_type,dim = load_data("./Data/"+data[0])
         print("Name:",name,"Dist:",weight_type,"Dim:",dim)
-        t = time.time()
-        print "Optimal:",held_karp(graph),"Time:",time.time()-t,"s"
-        t = time.time()
-        print "nearest-Neighbour:",nearest_neighbour(graph),"Time:",time.time()-t,"s"
+        for f in [
+            ('Held-Karp',held_karp),
+            ('Nearest-Neighbour',nearest_neighbour),
+            ('2-Approximation',two_approximation)
+            ]:
+            print f[0],"[dist][time][error]"
+            t = time.time()
+            sol = f[1](graph)
+            t = time.time()-t
+            e = float(sol-data[1])/data[1]
+            print sol,',',t,',',e
+            res.append(sol)
+            res.append(t)
+            res.append(e)
+        results.append(res)
         print ""
+    print "----------------------------------"
+    for r in results:
+        print "\t".join([str(x) for x in r])

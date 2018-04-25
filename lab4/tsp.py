@@ -90,8 +90,10 @@ def check_distance(path,graph):
 def held_karp(graph):
     d = dict()
     p = dict()
-    dist = hk_visit('1',graph,graph.keys(),d,p,time.time(),120)
-    path = get_path(p,('1',hashlist(graph.keys())))
+    bound = nearest_neighbour(graph)
+    print "BOUND:",bound
+    dist = hk_visit2('1',graph,graph.keys(),d,p,time.time(),30,bound)
+    # path = get_path(p,('1',hashlist(graph.keys())))
     # print path
     return dist
 
@@ -113,6 +115,32 @@ def hk_visit(v,graph,S,d,p,start,limit):
             S2 = [x for x in S if x!=v]
             S2.sort(key=lambda x: graph[u]['dist'][x])
             dist = hk_visit(u,graph,S2,d,p,start,limit)
+            if (dist+graph[u]['dist'][v]) < mindist:
+                mindist = dist+graph[v]['dist'][u]
+                minprec = (u,hashlist(S2))
+    # print v,S_h
+    d[(v,S_h)] = mindist
+    p[(v,S_h)] = minprec
+    return mindist
+
+
+def hk_visit2(v,graph,S,d,p,start,limit,bound):
+    S_h = hashlist(S)
+    if len(S) == 1 and S[0]==v:
+        return graph['1']['dist'][v]
+    if (v,S_h) in d:
+        return d[(v,S_h)]
+    mindist = 99999999999999999999999
+    minprec = None
+    if bound<0:
+        return mindist
+    for u in S:
+        if time.time()-start>limit:
+            break
+        if u!=v:
+            S2 = [x for x in S if x!=v]
+            S2.sort(key=lambda x: graph[u]['dist'][x])
+            dist = hk_visit2(u,graph,S2,d,p,start,limit,bound-graph[u]['dist'][v])
             if (dist+graph[u]['dist'][v]) < mindist:
                 mindist = dist+graph[v]['dist'][u]
                 minprec = (u,hashlist(S2))
@@ -209,7 +237,7 @@ if __name__ == '__main__':
     results = []
     for data in [
         ('burma14.tsp',3323.0),
-        ('ulysses16.tsp',6859.0),
+        ('ulysses16.tsp',6747.0),#6859.0),
         ('berlin52.tsp',7542.0),
         ('kroA100.tsp',21282.0),
         ('ch150.tsp',6528.0),

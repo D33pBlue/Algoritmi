@@ -132,8 +132,8 @@ def hk_visit2(v,graph,S,d,p,start,limit,bound):
         return d[(v,S_h)]
     mindist = 99999999999999999999999
     minprec = None
-    if bound<0:
-        return mindist
+    # if bound<0:
+    #     return mindist
     for u in S:
         if time.time()-start>limit:
             break

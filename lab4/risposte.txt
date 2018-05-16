@@ -1,6 +1,8 @@
 
-1.
-Vedi file tabella.csv
+Sono stati implementati i seguenti algoritmi:
+- Held-Karp
+- Held-Karp con priorità: nella scelta ricorsiva del nodo da aggiungere al cammino viene data priorità ai nodi più vicini all'ultimo considerato (viene cercata la soluzione a partire da Nearest Neighbour, per poi considerare comunque tutti i casi). In questo modo, se l'algoritmo viene interrotto prima del raggiungimento di una soluzione ottima, si avrà in genere una soluzione approssimata migliore di quella fornita dall'algoritmo di Held-Karp che sceglie volta per volta il nodo a caso. Per cercare di ridurre esplorazioni inutili viene inoltre considerato il risultato ottenuto dall'algoritmo Nearest Neighbour come bound per la soluzione ottima, interrompendo l'esplorazione di un cammino non appena la distanza totale di questo superi tale valore.
+- Nearest Neighbour
+- 2-Approssimato con algoritmo di Prim
 
-2.
-Vedi lab4.zip
+E' allegata la tabella (tabella.ods o tabella.png) con i risultati ottenuti eseguendo gli algoritmi di Held-Karp con priorità, Nearest Neighbour e 2-Approssimato, con massimi limiti di tempo impostati a 30s e 120s.

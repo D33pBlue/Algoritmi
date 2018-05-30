@@ -160,18 +160,18 @@ def describe(clusters):
 
 if __name__ == '__main__':
     NAME = "3108"
-    LOAD = False # if True load clusters from file, 
+    LOAD = False # if True load clusters from file,
     # without calculating another time (if file esists)
     clusters = []
     # start computation
     t = time.time()
     if LOAD:
-        with open("clusters_"+NAME+".pickle","r") as f:
+        with open("Saves/clusters_"+NAME+".pickle","r") as f:
             clusters = pickle.load(f)
     else:
         dataset = load_data("Data/unifiedCancerData_"+NAME+".csv")
         clusters = hierarchical_clustering(dataset,15)
-        with open("clusters_"+NAME+".pickle","w") as f:
+        with open("Saves/clusters_"+NAME+".pickle","w") as f:
             pickle.dump(clusters,f)
     print "time",time.time()-t
     describe(clusters)

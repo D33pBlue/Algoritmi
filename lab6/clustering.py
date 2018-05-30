@@ -5,18 +5,18 @@ import cv2
 import pickle
 
 COLORS = [
-    (230, 25, 75),
+    (255, 0, 0),
     (60, 180, 75),
     (255, 225, 25),
     (0, 130, 200),
     (245, 130, 48),
     (145, 30, 180),
     (70, 240, 240),
-    (240, 50, 230),
-    (210, 245, 60),
+    (0, 102, 51),
+    (255,153,153),
     (128, 0, 0),
-    (170, 255, 195),
-    (128, 128, 0),
+    (0, 128, 128),
+    (128, 128, 128),
     (0,0,0),
     (0, 0, 128),
     (170, 110, 40)]
@@ -143,6 +143,7 @@ def plot(img,clusters,colors=COLORS):
         y = float(y)/float(len(cluster))
         centroid = (int(x),int(y))
         color = colors[i]
+        color = (color[2],color[1],color[0])
         for c in cluster:
             point = (int(c[1]),int(c[2]))
             cv2.circle(im,point,radius=radius,color=color,thickness=-2)

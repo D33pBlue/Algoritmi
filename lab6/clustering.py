@@ -130,8 +130,8 @@ def fastClosestPair(P,S):
         return k
 
 
-def plot(img,clusters,colors=COLORS):
-    im = cv2.imread(img)
+def plot(base,imgname,clusters,colors=COLORS):
+    im = cv2.imread(base)
     radius = 3
     for i in range(len(clusters)):
         cluster = clusters[i]
@@ -148,7 +148,7 @@ def plot(img,clusters,colors=COLORS):
             point = (int(c[1]),int(c[2]))
             cv2.circle(im,point,radius=radius,color=color,thickness=-2)
             cv2.line(im,centroid,point,color=color,thickness=2)
-    cv2.imwrite("Images/plot.png",im)
+    cv2.imwrite(imgname,im)
 
 def describe(clusters):
     s = 0
@@ -159,14 +159,20 @@ def describe(clusters):
     print "sum elems",s
 
 if __name__ == '__main__':
-    # dataset = load_data("Data/unifiedCancerData_3108.csv")
-    t = time.time()
-    # clusters = hierarchical_clustering(dataset,15)
-    # with open("clusters","w") as f:
-    #     pickle.dump(clusters,f)
+    NAME = "3108"
+    LOAD = False # if True load clusters from file, 
+    # without calculating another time (if file esists)
     clusters = []
-    with open("clusters","r") as f:
-        clusters = pickle.load(f)
+    # start computation
+    t = time.time()
+    if LOAD:
+        with open("clusters_"+NAME+".pickle","r") as f:
+            clusters = pickle.load(f)
+    else:
+        dataset = load_data("Data/unifiedCancerData_"+NAME+".csv")
+        clusters = hierarchical_clustering(dataset,15)
+        with open("clusters_"+NAME+".pickle","w") as f:
+            pickle.dump(clusters,f)
     print "time",time.time()-t
     describe(clusters)
-    plot("Images/USA_Counties.png",clusters)
+    plot("Images/USA_Counties.png","Images/clusters_"+NAME+".png",clusters)

@@ -4,7 +4,22 @@ import time
 import cv2
 import pickle
 
-popmax,probmax = 0,0
+COLORS = [
+    (230, 25, 75),
+    (60, 180, 75),
+    (255, 225, 25),
+    (0, 130, 200),
+    (245, 130, 48),
+    (145, 30, 180),
+    (70, 240, 240),
+    (240, 50, 230),
+    (210, 245, 60),
+    (128, 0, 0),
+    (170, 255, 195),
+    (128, 128, 0),
+    (0,0,0),
+    (0, 0, 128),
+    (170, 110, 40)]
 
 def load_data(path):
     dataset = []
@@ -40,8 +55,6 @@ def hierarchical_clustering(P,k):
         else:
             del clusters[centroids[j][2]]
             del clusters[centroids[i][2]]
-        # print i,j
-        # print "dopo",sum([len(x) for x in clusters])
     return clusters
 
 
@@ -52,9 +65,7 @@ def getClosestPair(P):
     return i,j
 
 def distance(p1,p2):
-    # return math.sqrt((p1[0]/popmax-p2[0]/popmax)**2+(p1[1]/probmax-p2[1]/probmax)**2)
     return math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2)
-    # return (p1[1]-p2[1])**2
 
 def slowClosestPair(P):
     d,i,j = sys.maxint,-1,-1
@@ -119,33 +130,42 @@ def fastClosestPair(P,S):
         return k
 
 
-def plot(img,clusters):
+def plot(img,clusters,colors=COLORS):
     im = cv2.imread(img)
-    colors = [(230, 25, 75),(60, 180, 75),(255, 225, 25),(0, 130, 200),(245, 130, 48),(145, 30, 180),(70, 240, 240),(240, 50, 230),(210, 245, 60),(128, 0, 0),(170, 255, 195),(128, 128, 0),(0,0,0),(0, 0, 128),(170, 110, 40)]
+    radius = 3
     for i in range(len(clusters)):
         cluster = clusters[i]
+        x,y = 0,0
+        for point in cluster:
+            x += point[1]
+            y += point[2]
+        x = float(x)/float(len(cluster))
+        y = float(y)/float(len(cluster))
+        centroid = (int(x),int(y))
         color = colors[i]
         for c in cluster:
-            for z in range(3):
-                for x in range(int(c[2])-2,int(c[2])+2):
-                    for y in range(int(c[1])-2,int(c[1])+2):
-                        im[x][y][z]=color[z]
-    cv2.imwrite("plot.png",im)
+            point = (int(c[1]),int(c[2]))
+            cv2.circle(im,point,radius=radius,color=color,thickness=-2)
+            cv2.line(im,centroid,point,color=color,thickness=2)
+    cv2.imwrite("Images/plot.png",im)
 
+def describe(clusters):
+    s = 0
+    for i,c in enumerate(clusters):
+        print "cluster",i,"size:",len(c)
+        s += len(c)
+    print "num clusters",len(clusters)
+    print "sum elems",s
 
 if __name__ == '__main__':
-    dataset = load_data("Data/unifiedCancerData_3108.csv")
-    popmax = max([x[3] for x in dataset])
-    probmax = max([x[4] for x in dataset])
-    # getClosestPair(dataset)
+    # dataset = load_data("Data/unifiedCancerData_3108.csv")
     t = time.time()
-    clusters = hierarchical_clustering(dataset,15)
-    # pickle.dump(clusters,"clusters.pickle")
-    s = 0
-    for c in clusters:
-        print len(c)
-        s += len(c)
-    print "clusters",len(clusters)
-    print "sum",s
+    # clusters = hierarchical_clustering(dataset,15)
+    # with open("clusters","w") as f:
+    #     pickle.dump(clusters,f)
+    clusters = []
+    with open("clusters","r") as f:
+        clusters = pickle.load(f)
     print "time",time.time()-t
+    describe(clusters)
     plot("Images/USA_Counties.png",clusters)

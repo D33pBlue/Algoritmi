@@ -3,6 +3,7 @@ import math
 import time
 import cv2
 import pickle
+from matplotlib import pyplot as plt
 
 COLORS = [
     (255, 0, 0),
@@ -19,6 +20,7 @@ COLORS = [
     (128, 128, 128),
     (0,0,0),
     (0, 0, 128),
+    (135,80,96),
     (170, 110, 40)]
 
 def load_data(path):
@@ -106,8 +108,6 @@ def closestPairStrip(S,P,mid,d):
                 j = S1[v][0]
     return d,i,j
 
-
-
 def fastClosestPair(P,S):
     n = len(P.keys())
     if n<3:
@@ -128,6 +128,37 @@ def fastClosestPair(P,S):
         if k3<k:
             k = k3
         return k
+
+def first_centroids(P,k):
+    centroids = sorted(P,key=lambda x: x[3],reverse=True)[:k]
+    return [(c[1],c[2]) for c in centroids]
+
+def kmeans(P,k,q):
+    n = len(P)
+    centroids = first_centroids(P,k)
+    clusters = []
+    for i in range(q):
+        clusters = [[] for w in range(k)]
+        for j in range(n):
+            l = 0
+            d = sys.maxint
+            for f in range(len(centroids)):
+                d2 = math.sqrt((P[j][1]-centroids[f][0])**2+(P[j][2]-centroids[f][1])**2)
+                if d2<d:
+                    d = d2
+                    l = f
+            clusters[l].append(P[j])
+        for f in range(k):
+            x,y = 0,0
+            for point in clusters[f]:
+                x += point[1]
+                y += point[2]
+            x = float(x)/float(len(clusters[f]))
+            y = float(y)/float(len(clusters[f]))
+            centroids[f] = (x,y)
+    return clusters
+
+
 
 
 def plot(base,imgname,clusters,colors=COLORS):
@@ -158,21 +189,87 @@ def describe(clusters):
     print "num clusters",len(clusters)
     print "sum elems",s
 
+def time_graph(dataset):
+    times_hier = []
+    times_kmeans = []
+    for i in range(len(dataset)):
+        try:
+            k = len(dataset)-i
+            print k
+            t = time.time()
+            clusters = hierarchical_clustering(dataset,k)
+            times_hier.append((time.time()-t,k))
+            t = time.time()
+            clusters_kmeans = kmeans(dataset,k,5)
+            times_kmeans.append((time.time()-t,k))
+        except:
+            pass
+    plt.plot([x[1] for x in times_hier],[x[0] for x in times_hier])
+    plt.show()
+    plt.plot([x[1] for x in times_kmeans],[x[0] for x in times_kmeans])
+    plt.show()
+
+def error(C):
+    x,y = 0,0
+    for point in C:
+        x += point[1]
+        y += point[2]
+    x = float(x)/float(len(C))
+    y = float(y)/float(len(C))
+    centroid = (x,y)
+    s = 0.0
+    for p in C:
+        s += p[3]*((centroid[0]-p[1])**2+(centroid[1]-p[2])**2)
+    return s
+
+def distortion(L):
+    return sum([error(c) for c in L])
+
+def distortion_graph(dataset,name):
+    disth = []
+    distk = []
+    for k in range(6,21):
+        clusters_hier = hierarchical_clustering(dataset,k)
+        clusters_kmeans = kmeans(dataset,k,5)
+        disth.append((k,distortion(clusters_hier)))
+        distk.append((k,distortion(clusters_kmeans)))
+    plt.title("Dataset: unifiedCancerData_"+name+".csv")
+    plt.plot([x[0] for x in disth],[x[1] for x in disth],label="hierarchical")
+    plt.plot([x[0] for x in distk],[x[1] for x in distk],label="kmeans")
+    plt.legend()
+    plt.show()
+
+
 if __name__ == '__main__':
-    NAME = "3108"
-    LOAD = False # if True load clusters from file,
-    # without calculating another time (if file esists)
-    clusters = []
-    # start computation
-    t = time.time()
-    if LOAD:
-        with open("Saves/clusters_"+NAME+".pickle","r") as f:
-            clusters = pickle.load(f)
-    else:
+    # NAME = "111"
+    # CLUSTERS = 9
+    # LOAD = False # if True load clusters from file,
+    # # without calculating another time (if file esists)
+    # clusters = []
+    # # start computation
+    # print "hierarchical_clustering"
+    # t = time.time()
+    # if LOAD:
+    #     with open("Saves/clusters_"+NAME+".pickle","r") as f:
+    #         clusters = pickle.load(f)
+    # else:
+    #     dataset = load_data("Data/unifiedCancerData_"+NAME+".csv")
+    #     clusters = hierarchical_clustering(dataset,CLUSTERS)
+    #     with open("Saves/clusters_"+NAME+".pickle","w") as f:
+    #         pickle.dump(clusters,f)
+    # print "time",time.time()-t
+    # describe(clusters)
+    # plot("Images/USA_Counties.png","Images/clusters_"+NAME+".png",clusters)
+    # print "\n\nK-MEANS"
+    # t = time.time()
+    # dataset = load_data("Data/unifiedCancerData_"+NAME+".csv")
+    # clusters_kmeans = kmeans(dataset,CLUSTERS,5)
+    # plot("Images/USA_Counties.png","Images/clusters_kmeans_"+NAME+".png",clusters_kmeans)
+    # describe(clusters_kmeans)
+    # print "time",time.time()-t
+    # # time_graph(dataset)
+    # print "dist hierarchical_clustering",distortion(clusters)
+    # print "dist kmeans",distortion(clusters_kmeans)
+    for NAME in ['111','290','896']:
         dataset = load_data("Data/unifiedCancerData_"+NAME+".csv")
-        clusters = hierarchical_clustering(dataset,15)
-        with open("Saves/clusters_"+NAME+".pickle","w") as f:
-            pickle.dump(clusters,f)
-    print "time",time.time()-t
-    describe(clusters)
-    plot("Images/USA_Counties.png","Images/clusters_"+NAME+".png",clusters)
+        distortion_graph(dataset,NAME)

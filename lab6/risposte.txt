@@ -1,0 +1,5 @@
+
+
+6.
+dist hierarchical_clustering 2.25133904374e+11
+dist kmeans 2.81360232504e+11

@@ -1,5 +1,31 @@
 
+1.
+L'immagine richiesta è allegata (domanda1-clusters_3108.png)
+
+2.
+L'immagine richiesta è allegata (domanda2-clusters_kmeans_3108.png)
+
+3.
+Per rispondere a questa domanda, utilizzando il dataset con 111 contee, sono stati creati due grafici che mostrano i tempi di esecuzione gell'algoritmo gerarchico e di kmeans al variare del numero di clusters (immagini tempi_gerarchico.png e tempo_kmeans.png). Come si può vedere dalle figure, l'algoritmo gerarchico è pressoché istantaneo quando il numero di cluster è vicino al numero di elementi nel dataset, mentre aumenta col diminuire del numero di clusters. L'algoritmo K-means al contrario ha i tempi di esecuzione che aumentano con l'aumentare del numero di clusters (in modo lineare). Pertanto K-Means è più veloce quando il numero di cluster di output è un numero piccolo.
+
+4.
+L'immagine richiesta è allegata (domanda4-clusters_111.png)
+
+5.
+L'immagine richiesta è allegata (domanda5-clusters_kmeans_111.png)
 
 6.
-dist hierarchical_clustering 2.25133904374e+11
-dist kmeans 2.81360232504e+11
+Distorsione clustering gerarchico: 2.25133904374e+11
+Distorsione K.Means: 2.81360232504e+11
+
+7.
+I clusters generati con K-Means lungo la costa occidentale hanno maggior distorsione rispetto a quelli generati con l'algoritmo gerarchico. Questo perché K-Means genera i clusters a partire da una configurazione iniziale, mentre il secondo algoritmo ad ogni iterazione considera solamente le distanze senza fare assunzioni. K-Means per come è stato implementato seleziona come centroidi iniziali i punti presenti maggiormente popolosi e questo determina che vengano a generarsi clusters i cui punti interni risultano maggiormente distanti.
+
+8.
+Il clustering gerarchico, che è indipendente da stato iniziale dei clusters
+
+9.
+I grafici richiesti sono allegati (distgraph_111.png, distgraph_290.png, distgraph_896.png)
+
+10.
+Nel set di dati con 111 contee il clustering gerarchico ha sempre distorsione inferiore. Negli altri due dataset i risultati sono sempre comparabili ma non vi è un algoritmo con distorsione coerentemente inferiore.

@@ -5,6 +5,7 @@ import cv2
 import pickle
 from matplotlib import pyplot as plt
 
+#List of the colors used to plot the graphs, saved as rgb codes
 COLORS = [
     (255, 0, 0),
     (60, 180, 75),
@@ -23,6 +24,11 @@ COLORS = [
     (135,80,96),
     (170, 110, 40)]
 
+### <summary>
+### Function used to load the dataset
+### </summary>
+### <param name="path"></param> Path where the dataset is located
+### <returns>Returns the dataset loaded by the function</returns>
 def load_data(path):
     dataset = []
     with open(path,'r') as f:
@@ -30,6 +36,11 @@ def load_data(path):
             dataset.append([float(x) for x in line.split(",")])
     return dataset
 
+### <summary>
+### Function used to calculate the centroids starting from a list of clusters
+### </summary>
+### <param name="clusters"></param> List of clusters
+### <returns>Returns a list of centroids</returns>
 def get_centroids(clusters):
     centroids = []
     for i,cluster in enumerate(clusters):
@@ -43,6 +54,12 @@ def get_centroids(clusters):
     centroids = sorted(centroids)
     return {k:centroids[k] for k in range(len(centroids))}
 
+### <summary>
+### Main function of the hierarchical clustering algorithm
+### </summary>
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y)
+### <param name="k"></param> Number of clusters created by the algorithm
+### <returns>Returns the list of clusters created by the algorithm</returns>
 def hierarchical_clustering(P,k):
     n = len(P)
     clusters = [[x] for x in P]
@@ -59,16 +76,31 @@ def hierarchical_clustering(P,k):
             del clusters[centroids[i][2]]
     return clusters
 
-
+### <summary>
+### Function used to calculate the closest pair of points
+### </summary>
+### <param name="P"></param> List of centroids
+### <returns>Returns the indexes of the two closes centroids</returns>
 def getClosestPair(P):
     S = [(i,P[i][1]) for i in range(len(P.keys()))]
     S = sorted(S,key= lambda x: x[1])
     d,i,j = fastClosestPair(P,S)
     return i,j
 
+### <summary>
+### Function used to calculate the distrance between two points
+### </summary>
+### <param name="p1"></param> First point
+### <param name="p2"></param> Second point
+### <returns>Returns the distance between the two points</returns>
 def distance(p1,p2):
     return math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2)
 
+### <summary>
+### Function used to find the closest pair in a list of points
+### </summary>
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y)
+### <returns>Returns the indexes of the two closest points, along with the distance between the two</returns>
 def slowClosestPair(P):
     d,i,j = sys.maxint,-1,-1
     for u in P.keys():
@@ -81,6 +113,14 @@ def slowClosestPair(P):
                     j = v
     return d,i,j
 
+### <summary>
+### Function used split the vector S in two smaller vectors Sl, Sr, still ordered by the y coordinate
+### </summary>
+### <param name="S"></param> List of points' indexes, ordered by the y coordinate
+### <param name="Pl"></param> Left partition of the list of points
+### <param name="Pr"></param> Right partition of the list of points
+### <returns>Returns the two vectors Sl, Sr, containing the indexes of the list of points memorized in Pl and Pr respectively
+### and ordered by the y coordinate</returns>
 def vector_split(S,Pl,Pr):
     n = len(S)
     Sl,Sr = [],[]
@@ -91,7 +131,14 @@ def vector_split(S,Pl,Pr):
             Sr.append(S[i])
     return Sl,Sr
 
-
+### <summary>
+### Function used to calculate the closest pair of points found around the mid lane of the list with a distance no bigger thatn d from it
+### </summary>
+### <param name="S"></param> List of points' indexes, ordered by the y coordinate
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y) and ordered by the x coordinate
+### <param name="mid"></param> Real value showing the center of the points
+### <param name="d"></param> Real value representing the minumum distance found between two points until now
+### <returns>Returns the indexes of the two closest points, along with the distance between the two</returns>
 def closestPairStrip(S,P,mid,d):
     n = len(S)
     S1 = []
@@ -108,6 +155,12 @@ def closestPairStrip(S,P,mid,d):
                 j = S1[v][0]
     return d,i,j
 
+### <summary>
+### Function used to calculate the distrance between two points
+### </summary>
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y) and ordered by the x coordinate
+### <param name="S"></param> List of points' indexes, ordered by the y coordinate
+### <returns>Returns the indexes of the two closest points, along with the distance between the two</returns>
 def fastClosestPair(P,S):
     n = len(P.keys())
     if n<3:
@@ -129,10 +182,23 @@ def fastClosestPair(P,S):
             k = k3
         return k
 
+### <summary>
+### Function used to find the first set of centroinds used to stasrt the k-means clustering algorithm
+### </summary>
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y)
+### <param name="k"></param> Number of centroids the function returns
+### <returns>Returns the dataset loaded by the function</returns>
 def first_centroids(P,k):
     centroids = sorted(P,key=lambda x: x[3],reverse=True)[:k]
     return [(c[1],c[2]) for c in centroids]
 
+### <summary>
+### Main function of the k-means clustering algorithm
+### </summary>
+### <param name="P"></param> List of points, represented by a pair of coordinates (x,y)
+### <param name="k"></param> Number of clusters calculated by the algorithm
+### <param name="q"></param> Number of iterations carried out by the algorithm
+### <returns>Returns the list of clusters calculated by the function</returns>
 def kmeans(P,k,q):
     n = len(P)
     centroids = first_centroids(P,k)
@@ -160,7 +226,14 @@ def kmeans(P,k,q):
 
 
 
-
+### <summary>
+### Function used to plot the results of the algorithms
+### </summary>
+### <param name="base"></param> Image used as a base where to plot the clusters
+### <param name="imgname"></param> Name of the image created by the plot function
+### <param name="clusters"></param> List of clusters to plot
+### <param name="colors"></param> List of colors used for the different clusters
+### <returns></returns>
 def plot(base,imgname,clusters,colors=COLORS):
     im = cv2.imread(base)
     radius = 3
@@ -181,6 +254,11 @@ def plot(base,imgname,clusters,colors=COLORS):
             cv2.line(im,centroid,point,color=color,thickness=2)
     cv2.imwrite(imgname,im)
 
+### <summary>
+### Function used to print information on the clusters generated by the algorithms to check the results
+### </summary>
+### <param name="clusters"></param> List of clusters
+### <returns></returns>
 def describe(clusters):
     s = 0
     for i,c in enumerate(clusters):
@@ -189,6 +267,11 @@ def describe(clusters):
     print "num clusters",len(clusters)
     print "sum elems",s
 
+### <summary>
+### Function used to print a time graph of the time taken by the diferent algorithms for comparison pourposes
+### </summary>
+### <param name="dataset"></param> Datased on which to call the algorithms
+### <returns></returns>
 def time_graph(dataset):
     times_hier = []
     times_kmeans = []
@@ -209,6 +292,11 @@ def time_graph(dataset):
     plt.plot([x[1] for x in times_kmeans],[x[0] for x in times_kmeans])
     plt.show()
 
+### <summary>
+### Function used to calculate the error inside a cluster
+### </summary>
+### <param name="C"></param> Cluster
+### <returns>Returns the error value</returns>
 def error(C):
     x,y = 0,0
     for point in C:
@@ -222,9 +310,20 @@ def error(C):
         s += p[3]*((centroid[0]-p[1])**2+(centroid[1]-p[2])**2)
     return s
 
+### <summary>
+### Function used to calculate the distorsion in a list of clusters
+### </summary>
+### <param name="L"></param> List of clusters
+### <returns>Returns the distortion value</returns>
 def distortion(L):
     return sum([error(c) for c in L])
 
+### <summary>
+### Function used to plot the different distortion values generated by the algorithms for comparison pourposes
+### </summary>
+### <param name="dataset"></param> Dataset used
+### <param name="name"></param> Name used to indicate which dataset has been used in the graph's title
+### <returns></returns>
 def distortion_graph(dataset,name):
     disth = []
     distk = []
